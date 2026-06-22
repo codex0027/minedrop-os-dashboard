@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Moderation — MineDrop OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="stylesheet" href="assets/css/theme.css" />
+</head>
+<body>
+<aside id="sidebar" class="sidebar"></aside>
+<div class="main">
+  <header id="topbar" class="topbar"></header>
+  <div class="content">
+
+    <!-- Protection toggles -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">▎ Protection Features</div>
+        <button class="btn btn-sm" onclick="toast('Settings saved to database','success')"><i data-lucide="save" style="width:12px;height:12px;"></i> Save</button>
+      </div>
+      <div class="card-body">
+        <div id="protections-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;"></div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;">
+      <!-- Banned words -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">▎ Banned Words</div>
+          <span class="badge"><span id="bw-count">5</span> entries</span>
+        </div>
+        <div class="card-body">
+          <div style="display:flex;gap:8px;margin-bottom:14px;">
+            <input id="bw-input" class="input" placeholder="Add new banned word..." />
+            <button class="btn btn-primary" onclick="addBadWord()"><i data-lucide="plus" style="width:14px;height:14px;"></i> Add</button>
+          </div>
+          <div style="max-height:340px;overflow-y:auto;">
+            <table class="table" id="bw-table">
+              <thead><tr><th>Word</th><th>Added by</th><th>Date</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scam phrases -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">▎ Scam Phrases</div>
+          <span class="badge"><span id="sp-count">7</span> entries</span>
+        </div>
+        <div class="card-body">
+          <div style="display:flex;gap:8px;margin-bottom:14px;">
+            <input id="sp-input" class="input" placeholder="Add new scam phrase..." />
+            <button class="btn btn-primary" onclick="addScam()"><i data-lucide="plus" style="width:14px;height:14px;"></i> Add</button>
+          </div>
+          <div style="max-height:340px;overflow-y:auto;">
+            <table class="table" id="sp-table">
+              <thead><tr><th>Phrase</th><th>Hits</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unicode filter + escalation -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;">
+      <div class="card">
+        <div class="card-header"><div class="card-title">▎ Unicode Filter</div></div>
+        <div class="card-body">
+          <p style="font-size:13px;color:var(--text-dim);margin:0 0 14px;">Catches unicode bypass attempts like <span class="font-mono kbd">𝖋𝖗𝖊𝖊 𝖓𝖎𝖙𝖗𝖔</span> or <span class="font-mono kbd">ＦＲＥＥ ＮＩＴＲＯ</span>.</p>
+
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--border);">
+            <div><div style="font-weight:600;font-size:13px;">Mathematical alphanumeric symbols</div><div style="font-size:11px;color:var(--text-mute);">Block U+1D400 – U+1D7FF</div></div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--border);">
+            <div><div style="font-weight:600;font-size:13px;">Fullwidth ASCII forms</div><div style="font-size:11px;color:var(--text-mute);">Block U+FF00 – U+FFEF</div></div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--border);">
+            <div><div style="font-weight:600;font-size:13px;">Confusable / Cyrillic homoglyphs</div><div style="font-size:11px;color:var(--text-mute);">Map а→a, е→e, о→o, ѕ→s, etc.</div></div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--border);">
+            <div><div style="font-weight:600;font-size:13px;">Zero-width characters</div><div style="font-size:11px;color:var(--text-mute);">Strip U+200B, U+200C, U+FEFF</div></div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--border);">
+            <div><div style="font-weight:600;font-size:13px;">RTL override blocking</div><div style="font-size:11px;color:var(--text-mute);">Block U+202E and friends</div></div>
+            <div class="toggle" onclick="this.classList.toggle('on')"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">▎ Punishment Escalation Ladder</div></div>
+        <div class="card-body">
+          <p style="font-size:13px;color:var(--text-dim);margin:0 0 14px;">Automatic escalation per user, used by Anti-Spam, Anti-Scam and Anti-Bad-Words.</p>
+          <div style="display:grid;gap:8px;">
+            <div style="display:grid;grid-template-columns:60px 1fr 120px;gap:10px;align-items:center;padding:10px;background:var(--bg-2);border-radius:4px;border-left:3px solid var(--grass);">
+              <span class="font-pixel" style="font-size:14px;">1st</span>
+              <span style="font-size:13px;">First offense</span>
+              <span class="badge badge-success">5 minutes</span>
+            </div>
+            <div style="display:grid;grid-template-columns:60px 1fr 120px;gap:10px;align-items:center;padding:10px;background:var(--bg-2);border-radius:4px;border-left:3px solid var(--diamond);">
+              <span class="font-pixel" style="font-size:14px;">2nd</span>
+              <span style="font-size:13px;">Repeat within 7d</span>
+              <span class="badge badge-info">1 hour</span>
+            </div>
+            <div style="display:grid;grid-template-columns:60px 1fr 120px;gap:10px;align-items:center;padding:10px;background:var(--bg-2);border-radius:4px;border-left:3px solid var(--gold);">
+              <span class="font-pixel" style="font-size:14px;">3rd</span>
+              <span style="font-size:13px;">Pattern detected</span>
+              <span class="badge badge-warn">1 day</span>
+            </div>
+            <div style="display:grid;grid-template-columns:60px 1fr 120px;gap:10px;align-items:center;padding:10px;background:var(--bg-2);border-radius:4px;border-left:3px solid var(--lava);">
+              <span class="font-pixel" style="font-size:14px;">4th</span>
+              <span style="font-size:13px;">Persistent abuser</span>
+              <span class="badge badge-warn">7 days</span>
+            </div>
+            <div style="display:grid;grid-template-columns:60px 1fr 120px;gap:10px;align-items:center;padding:10px;background:var(--bg-2);border-radius:4px;border-left:3px solid var(--redstone);">
+              <span class="font-pixel" style="font-size:14px;">5th</span>
+              <span style="font-size:13px;">Escalate to staff</span>
+              <span class="badge badge-danger">Manual review</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="assets/js/mock.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  renderShell({ title: 'Moderation', crumb: 'Operations / Moderation' });
+
+  // --- Protection toggles ---
+  const grid = document.getElementById('protections-grid');
+  grid.innerHTML = MOCK.protections.map(p => `
+    <div class="card" style="padding:14px;display:flex;justify-content:space-between;align-items:center;gap:14px;background:var(--bg-2);">
+      <div>
+        <div style="font-weight:600;font-size:13px;display:flex;align-items:center;gap:8px;">
+          ${p.name}
+          ${p.id==='maintenance' ? '<span class="badge badge-warn">danger zone</span>':''}
+        </div>
+        <div style="font-size:11px;color:var(--text-mute);margin-top:3px;">${p.desc}</div>
+      </div>
+      <div class="toggle ${p.on?'on':''}" data-id="${p.id}"></div>
+    </div>
+  `).join('');
+  grid.querySelectorAll('.toggle').forEach(t => {
+    t.addEventListener('click', () => {
+      t.classList.toggle('on');
+      toast(`${t.dataset.id}: ${t.classList.contains('on')?'enabled':'disabled'}`, 'info');
+    });
+  });
+
+  // --- Banned words ---
+  let bw = [...MOCK.bannedWords];
+  function renderBW() {
+    document.getElementById('bw-count').textContent = bw.length;
+    document.querySelector('#bw-table tbody').innerHTML = bw.map(w => `
+      <tr>
+        <td class="font-mono">${w.word}</td>
+        <td>${w.addedBy}</td>
+        <td class="font-mono" style="font-size:11px;">${w.date}</td>
+        <td style="text-align:right;"><button class="btn btn-sm btn-ghost" onclick="removeBW(${w.id})"><i data-lucide="trash-2" style="width:12px;height:12px;color:#fca5a5;"></i></button></td>
+      </tr>
+    `).join('');
+    lucide.createIcons();
+  }
+  function addBadWord() {
+    const v = document.getElementById('bw-input').value.trim();
+    if (!v) return toast('Word cannot be empty','warn');
+    bw.unshift({ id: Date.now(), word: v, addedBy:'Codex', date: new Date().toISOString().slice(0,10) });
+    document.getElementById('bw-input').value='';
+    renderBW();
+    toast('Banned word added to database','success');
+  }
+  function removeBW(id) {
+    bw = bw.filter(w => w.id !== id);
+    renderBW();
+    toast('Removed from database','info');
+  }
+  window.addBadWord = addBadWord; window.removeBW = removeBW;
+  renderBW();
+
+  // --- Scam phrases ---
+  let sp = [...MOCK.scamPhrases];
+  function renderSP() {
+    document.getElementById('sp-count').textContent = sp.length;
+    document.querySelector('#sp-table tbody').innerHTML = sp.map(s => `
+      <tr>
+        <td class="font-mono">${s.phrase}</td>
+        <td><span class="badge badge-warn">${s.hits}</span></td>
+        <td style="text-align:right;"><button class="btn btn-sm btn-ghost" onclick="removeSP(${s.id})"><i data-lucide="trash-2" style="width:12px;height:12px;color:#fca5a5;"></i></button></td>
+      </tr>
+    `).join('');
+    lucide.createIcons();
+  }
+  function addScam() {
+    const v = document.getElementById('sp-input').value.trim();
+    if (!v) return toast('Phrase cannot be empty','warn');
+    sp.unshift({ id: Date.now(), phrase: v, hits: 0 });
+    document.getElementById('sp-input').value='';
+    renderSP();
+    toast('Scam phrase added','success');
+  }
+  function removeSP(id) { sp = sp.filter(s=>s.id!==id); renderSP(); toast('Removed','info'); }
+  window.addScam=addScam; window.removeSP=removeSP;
+  renderSP();
+</script>
+</body>
+</html>

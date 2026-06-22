@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Backups — MineDrop OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="stylesheet" href="assets/css/theme.css" />
+</head>
+<body>
+<aside id="sidebar" class="sidebar"></aside>
+<div class="main">
+  <header id="topbar" class="topbar"></header>
+  <div class="content">
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;">
+      <div class="stat"><div class="stat-label">Total Backups</div><div class="stat-value" id="bk-count">6</div><div class="stat-delta">retention: 30d</div></div>
+      <div class="stat diamond"><div class="stat-label">Storage Used</div><div class="stat-value">283 <span style="font-size:14px;color:var(--text-mute);">MB</span></div><div class="stat-delta">of 5 GB</div></div>
+      <div class="stat gold"><div class="stat-label">Last Auto</div><div class="stat-value" style="font-size:14px;">03:00 UTC</div><div class="stat-delta">today</div></div>
+      <div class="stat purple"><div class="stat-label">Next Auto</div><div class="stat-value" style="font-size:14px;">03:00 UTC</div><div class="stat-delta">tomorrow</div></div>
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+      <div class="card-header">
+        <div class="card-title">▎ Backup Operations</div>
+        <span class="badge"><i data-lucide="clock" style="width:11px;height:11px;"></i> node-cron · daily 03:00</span>
+      </div>
+      <div class="card-body" style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="createBackup()"><i data-lucide="plus" style="width:14px;height:14px;"></i> Create Backup Now</button>
+        <button class="btn"><i data-lucide="upload" style="width:14px;height:14px;"></i> Upload Backup</button>
+        <button class="btn btn-warn" onclick="toast('Schedule editor coming soon','info')"><i data-lucide="settings" style="width:14px;height:14px;"></i> Edit Schedule</button>
+      </div>
+      <div style="padding:0 18px 18px;">
+        <div class="font-mono" style="font-size:11px;color:var(--text-mute);margin-top:6px;">
+          Snapshot contents → <span style="color:var(--grass-light);">bot configs</span> · <span style="color:var(--diamond);">SQLite database</span> · <span style="color:var(--gold);">ticket transcripts</span> · <span style="color:var(--enderpurple);">moderation tables</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+      <div class="card-header"><div class="card-title">▎ Backup Archive</div></div>
+      <table class="table" id="bk-table">
+        <thead><tr><th>ID</th><th>Created</th><th>Type</th><th>Size</th><th>Integrity</th><th>Actions</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script src="assets/js/mock.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  renderShell({ title: 'Backup System', crumb: 'System / Backups' });
+
+  let backups = [...MOCK.backups];
+  function render() {
+    document.getElementById('bk-count').textContent = backups.length;
+    document.querySelector('#bk-table tbody').innerHTML = backups.map(b => `
+      <tr>
+        <td class="font-mono" style="font-size:11px;color:var(--diamond);">${b.id}</td>
+        <td class="font-mono" style="font-size:12px;">${b.created}</td>
+        <td><span class="badge ${b.type==='auto'?'badge-info':'badge-purple'}">${b.type}</span></td>
+        <td class="font-mono">${b.size}</td>
+        <td><span class="badge badge-success"><i data-lucide="check" style="width:10px;height:10px;"></i> ok</span></td>
+        <td style="text-align:right;">
+          <button class="btn btn-sm" onclick="toast('Downloading ${b.id}...','info')"><i data-lucide="download" style="width:12px;height:12px;"></i></button>
+          <button class="btn btn-sm btn-warn" onclick="confirmRestore('${b.id}')"><i data-lucide="rotate-ccw" style="width:12px;height:12px;"></i> Restore</button>
+          <button class="btn btn-sm" onclick="del('${b.id}')"><i data-lucide="trash-2" style="width:12px;height:12px;color:#fca5a5;"></i></button>
+        </td>
+      </tr>
+    `).join('');
+    lucide.createIcons();
+  }
+  function createBackup() {
+    toast('Creating backup snapshot...','info');
+    setTimeout(()=>{
+      const now = new Date();
+      const stamp = now.toISOString().replace(/[-:T]/g,'').slice(0,13);
+      backups.unshift({ id:'bkp_'+stamp, size:'48.3 MB', created: now.toISOString().slice(0,19).replace('T',' '), type:'manual', integrity:'ok' });
+      render();
+      toast('Backup created successfully','success');
+    }, 1200);
+  }
+  function confirmRestore(id) {
+    if (confirm(`Restore from ${id}? This will overwrite current state.`)) {
+      toast('Restore in progress...','warn');
+      setTimeout(()=> toast('Restore complete · bot restarting','success'), 1400);
+    }
+  }
+  function del(id) { backups = backups.filter(b=>b.id!==id); render(); toast('Backup deleted','info'); }
+  window.createBackup = createBackup; window.confirmRestore = confirmRestore; window.del = del;
+  render();
+</script>
+</body>
+</html>

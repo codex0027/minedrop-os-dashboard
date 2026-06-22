@@ -1,0 +1,126 @@
+// Mock data for the entire dashboard demo
+
+const MOCK = {
+  discord: {
+    members: 4287,
+    joinsToday: 47,
+    leavesToday: 12,
+    activeNow: 312,
+    tickets: { open: 8, closed: 1421 },
+    suggestions: 184,
+    punishments: 67,
+    spamDetections: 218,
+    linkDetections: 94,
+  },
+  minecraft: {
+    online: true,
+    javaOnline: true,
+    bedrockOnline: true,
+    playersOnline: 137,
+    maxPlayers: 500,
+    tps: 19.8,
+    cpu: 42,
+    ram: 68,
+    ping: 24,
+    ip: 'play.minedrop.net',
+    javaPort: 25565,
+    bedrockPort: 19132,
+    version: '1.21.4',
+  },
+  bannedWords: [
+    { id:1, word:'n***er',   addedBy:'Codex',  date:'2025-09-14' },
+    { id:2, word:'f***ot',   addedBy:'Hexz',   date:'2025-09-14' },
+    { id:3, word:'r***rd',   addedBy:'Codex',  date:'2025-10-02' },
+    { id:4, word:'sl*r',     addedBy:'Mira',   date:'2025-11-11' },
+    { id:5, word:'k*s',      addedBy:'Codex',  date:'2026-01-08' },
+  ],
+  scamPhrases: [
+    { id:1, phrase:'Free Nitro',      hits:42 },
+    { id:2, phrase:'Claim Reward',    hits:31 },
+    { id:3, phrase:'Steam Gift',      hits:18 },
+    { id:4, phrase:'Free Robux',      hits:12 },
+    { id:5, phrase:'Free Minecoins',  hits:9  },
+    { id:6, phrase:'Gift Card',       hits:7  },
+    { id:7, phrase:'Verify Account',  hits:21 },
+  ],
+  protections: [
+    { id:'antispam',   name:'Anti-Spam',        on:true,  desc:'Detects fast/repeated messages and bursts' },
+    { id:'antilink',   name:'Anti-Link',        on:true,  desc:'Blocks links outside allowed channels' },
+    { id:'antiscam',   name:'Anti-Scam',        on:true,  desc:'Matches scam phrase patterns' },
+    { id:'antiunicode',name:'Anti-Unicode',     on:true,  desc:'Catches unicode bypass attempts' },
+    { id:'antibadword',name:'Anti-Bad-Words',   on:true,  desc:'Blocks words in the bad-words table' },
+    { id:'antiinvite', name:'Anti-Invite',      on:true,  desc:'Removes external Discord invites' },
+    { id:'antimention',name:'Anti-Mass-Mention',on:false, desc:'Flags @everyone / mass user pings' },
+    { id:'maintenance',name:'Maintenance Mode', on:false, desc:'Pauses all moderation actions' },
+  ],
+  linkChannels: [
+    { id:'1502300000001', name:'#media' },
+    { id:'1502300000002', name:'#minedrop-social-media' },
+    { id:'1502300000003', name:'#announcements' },
+    { id:'1502300000004', name:'#youtube-clips' },
+    { id:'1502300000005', name:'#suggestions' },
+  ],
+  tickets: [
+    { id:'TKT-1432', user:'JulianMC#0042',   topic:'Cannot connect to bedrock',     status:'open',   claimedBy:'Mira',     created:'2026-06-22 14:02' },
+    { id:'TKT-1431', user:'Kawii.exe',       topic:'Refund request — VIP rank',     status:'open',   claimedBy:'—',        created:'2026-06-22 13:48' },
+    { id:'TKT-1430', user:'NoobMaster69',    topic:'Reporting player griefing',     status:'open',   claimedBy:'Hexz',     created:'2026-06-22 12:11' },
+    { id:'TKT-1429', user:'silverwolf',      topic:'Faction merge question',         status:'open',   claimedBy:'Codex',    created:'2026-06-22 11:30' },
+    { id:'TKT-1428', user:'AshleyPlays',     topic:'Discord nickname stuck',         status:'closed', claimedBy:'Mira',     created:'2026-06-22 09:14' },
+    { id:'TKT-1427', user:'Zenith_yt',       topic:'YouTuber rank application',      status:'closed', claimedBy:'Codex',    created:'2026-06-21 22:55' },
+    { id:'TKT-1426', user:'DragonSlayer',    topic:'Crash on join',                  status:'closed', claimedBy:'Dev_Joel', created:'2026-06-21 21:02' },
+    { id:'TKT-1425', user:'Mocha_Latte',     topic:'Appeal — 1d timeout',            status:'closed', claimedBy:'Hexz',     created:'2026-06-21 19:48' },
+    { id:'TKT-1424', user:'Phantom',         topic:'Bug — /vote command',            status:'closed', claimedBy:'Dev_Joel', created:'2026-06-21 17:30' },
+    { id:'TKT-1423', user:'BlueFox',         topic:'Cosmetic missing after restart', status:'closed', claimedBy:'Mira',     created:'2026-06-21 15:01' },
+  ],
+  staffRoles: [
+    { id:'1501998111630037112', name:'Owner',         color:'#fbbf24', members:1, perms:'Full access' },
+    { id:'1502005028574204005', name:'Co-Owner',      color:'#f97316', members:1, perms:'Full access (no destruct)' },
+    { id:'1504474010522751200', name:'CODEX',         color:'#a855f7', members:1, perms:'System / bot dev' },
+    { id:'1502026707648118924', name:'Admin',         color:'#ef4444', members:4, perms:'All ops except role mgmt' },
+    { id:'1501998588736307395', name:'Developer',     color:'#38bdf8', members:2, perms:'Bot controls, logs, backups' },
+    { id:'1502027487658639371', name:'Moderator',     color:'#5fb84a', members:8, perms:'Tickets, moderation, logs' },
+    { id:'1502226362960842884', name:'Support Team',  color:'#22d3ee', members:6, perms:'Tickets only' },
+    { id:'1502027980212535589', name:'Builder',       color:'#84cc16', members:5, perms:'Read-only analytics' },
+  ],
+  backups: [
+    { id:'bkp_20260622_0300', size:'48.2 MB', created:'2026-06-22 03:00', type:'auto',   integrity:'ok' },
+    { id:'bkp_20260621_0300', size:'47.9 MB', created:'2026-06-21 03:00', type:'auto',   integrity:'ok' },
+    { id:'bkp_20260620_0300', size:'47.4 MB', created:'2026-06-20 03:00', type:'auto',   integrity:'ok' },
+    { id:'bkp_20260619_1812', size:'46.8 MB', created:'2026-06-19 18:12', type:'manual', integrity:'ok' },
+    { id:'bkp_20260619_0300', size:'46.7 MB', created:'2026-06-19 03:00', type:'auto',   integrity:'ok' },
+    { id:'bkp_20260618_0300', size:'46.1 MB', created:'2026-06-18 03:00', type:'auto',   integrity:'ok' },
+  ],
+  channels: [
+    { id:'1', name:'announcements', cat:'INFO' },
+    { id:'2', name:'rules',         cat:'INFO' },
+    { id:'3', name:'general',       cat:'CHAT' },
+    { id:'4', name:'minecraft-chat',cat:'CHAT' },
+    { id:'5', name:'suggestions',   cat:'COMMUNITY' },
+    { id:'6', name:'media',         cat:'COMMUNITY' },
+    { id:'7', name:'youtube-clips', cat:'COMMUNITY' },
+    { id:'8', name:'staff-chat',    cat:'STAFF' },
+  ],
+
+  // Logs feed
+  logSeeds: [
+    { lvl:'info',  src:'mod',    msg:'Anti-spam timed out user JulianMC for 5m (1st offense).' },
+    { lvl:'warn',  src:'mod',    msg:'Scam phrase "Free Nitro" detected in #general from Kawii.exe.' },
+    { lvl:'ok',    src:'join',   msg:'Member joined: NewMember#0421 (#1,287 to join this month).' },
+    { lvl:'info',  src:'ticket', msg:'Mira claimed TKT-1432.' },
+    { lvl:'ok',    src:'ticket', msg:'TKT-1428 closed by Mira. Transcript stored.' },
+    { lvl:'error', src:'sec',    msg:'Unicode bypass attempt blocked: "𝖋𝖗𝖊𝖊 𝖓𝖎𝖙𝖗𝖔" from Phantom.' },
+    { lvl:'info',  src:'mc',     msg:'Player connected: silverwolf (Java) — 137/500.' },
+    { lvl:'warn',  src:'mc',     msg:'TPS dipped to 19.4 (region overload near spawn).' },
+    { lvl:'ok',    src:'sys',    msg:'Auto-backup bkp_20260622_0300 created (48.2 MB).' },
+    { lvl:'info',  src:'mod',    msg:'Link removed from #general (sent by NoobMaster69).' },
+  ],
+
+  // Charts
+  days: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+  hours: Array.from({length:24}, (_,i)=> String(i).padStart(2,'0')+':00'),
+};
+
+// Random walk helpers for live updates
+function jitter(base, amp) { return Math.max(0, base + (Math.random()-0.5)*amp); }
+function randInt(min, max) { return Math.floor(Math.random()*(max-min+1))+min; }
+function pick(arr) { return arr[randInt(0, arr.length-1)]; }

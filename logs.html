@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Live Logs — MineDrop OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="stylesheet" href="assets/css/theme.css" />
+</head>
+<body>
+<aside id="sidebar" class="sidebar"></aside>
+<div class="main">
+  <header id="topbar" class="topbar"></header>
+  <div class="content">
+
+    <div class="card">
+      <div class="card-header" style="flex-wrap:wrap;gap:10px;">
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+          <div class="card-title">▎ Live Stream</div>
+          <span class="badge badge-success"><span class="dot"></span> ws://logs · connected</span>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <div style="display:flex;gap:4px;background:var(--bg-3);border-radius:4px;padding:3px;">
+            <button class="btn btn-sm btn-primary" data-src="all">All</button>
+            <button class="btn btn-sm btn-ghost" data-src="mod">Moderation</button>
+            <button class="btn btn-sm btn-ghost" data-src="join">Join/Leave</button>
+            <button class="btn btn-sm btn-ghost" data-src="ticket">Tickets</button>
+            <button class="btn btn-sm btn-ghost" data-src="sec">Security</button>
+            <button class="btn btn-sm btn-ghost" data-src="mc">Minecraft</button>
+            <button class="btn btn-sm btn-ghost" data-src="sys">System</button>
+          </div>
+          <input id="log-q" class="input" placeholder="Search logs…" style="width:220px;" />
+          <button id="pause" class="btn btn-sm"><i data-lucide="pause" style="width:12px;height:12px;"></i> Pause</button>
+          <button class="btn btn-sm"><i data-lucide="download" style="width:12px;height:12px;"></i> Export</button>
+        </div>
+      </div>
+      <div id="log-stream" style="height:60vh;overflow-y:auto;background:#06090d;font-family:'JetBrains Mono',monospace;padding:8px 0;"></div>
+      <div style="padding:10px 14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-mute);">
+        <div><span id="log-count">0</span> entries · streaming live</div>
+        <div>Auto-scroll: <span class="kbd">on</span> · Buffer: 500 lines</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="assets/js/mock.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  renderShell({ title: 'Live Logs', crumb: 'Operations / Logs' });
+
+  const stream = document.getElementById('log-stream');
+  let filter = 'all', q = '', paused = false, total = 0;
+
+  function append(entry) {
+    if (paused) return;
+    if (filter!=='all' && entry.src !== filter) return;
+    if (q && !entry.msg.toLowerCase().includes(q)) return;
+    const div = document.createElement('div');
+    div.className = `log-line lvl-${entry.lvl}`;
+    div.innerHTML = `<span class="ts">${new Date().toISOString().slice(11,23)}</span><span class="lvl">${entry.src.toUpperCase()}</span><span class="msg">${entry.msg}</span>`;
+    stream.appendChild(div);
+    while (stream.children.length > 500) stream.removeChild(stream.firstChild);
+    stream.scrollTop = stream.scrollHeight;
+    total++;
+    document.getElementById('log-count').textContent = total.toLocaleString();
+  }
+
+  // Seed with 25 entries
+  for (let i=0;i<25;i++) append(pick(MOCK.logSeeds));
+
+  // Live append
+  setInterval(()=> append(pick(MOCK.logSeeds)), 1100);
+
+  document.querySelectorAll('[data-src]').forEach(b=>{
+    b.addEventListener('click', e=>{
+      document.querySelectorAll('[data-src]').forEach(x=>x.classList.replace('btn-primary','btn-ghost'));
+      e.currentTarget.classList.replace('btn-ghost','btn-primary');
+      filter = e.currentTarget.dataset.src;
+    });
+  });
+  document.getElementById('log-q').addEventListener('input', e => { q = e.target.value.toLowerCase(); });
+  document.getElementById('pause').addEventListener('click', e => {
+    paused = !paused;
+    e.currentTarget.innerHTML = paused
+      ? '<i data-lucide="play" style="width:12px;height:12px;"></i> Resume'
+      : '<i data-lucide="pause" style="width:12px;height:12px;"></i> Pause';
+    lucide.createIcons();
+  });
+</script>
+</body>
+</html>

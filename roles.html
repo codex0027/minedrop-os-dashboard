@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Access Control — MineDrop OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="stylesheet" href="assets/css/theme.css" />
+</head>
+<body>
+<aside id="sidebar" class="sidebar"></aside>
+<div class="main">
+  <header id="topbar" class="topbar"></header>
+  <div class="content">
+
+    <div class="card" style="background:rgba(168,85,247,0.05);border-color:rgba(168,85,247,0.25);">
+      <div class="card-body" style="display:flex;gap:14px;align-items:center;">
+        <i data-lucide="key-round" style="width:22px;height:22px;color:#d8b4fe;flex-shrink:0;"></i>
+        <div style="flex:1;">
+          <div style="font-weight:600;">Verified staff role IDs</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:3px;">Members holding any of these Discord role IDs will pass the OAuth2 gate. Guild ID is locked to <span class="font-mono kbd">1501991618138476576</span>.</div>
+        </div>
+        <button class="btn btn-primary" onclick="addRole()"><i data-lucide="plus" style="width:14px;height:14px;"></i> Add Role ID</button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-top:14px;">
+      <!-- Roles table -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">▎ Authorized Roles</div>
+          <span class="badge"><span id="r-count">8</span> roles · 28 members</span>
+        </div>
+        <table class="table" id="r-table">
+          <thead><tr><th>Role</th><th>Discord Role ID</th><th>Members</th><th>Permissions</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- Permission matrix -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">▎ Permission Matrix</div></div>
+        <div class="card-body" style="padding:0;">
+          <table class="table" style="font-size:11px;">
+            <thead><tr><th>Feature</th><th style="text-align:center;">Owner</th><th style="text-align:center;">Admin</th><th style="text-align:center;">Dev</th><th style="text-align:center;">Mod</th><th style="text-align:center;">Sup</th></tr></thead>
+            <tbody>
+              <tr><td>Analytics view</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--grass-light);">✓</td></tr>
+              <tr><td>Moderation edit</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--text-mute);">·</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--text-mute);">·</td></tr>
+              <tr><td>Ticket reply</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--grass-light);">✓</td></tr>
+              <tr><td>Bot controls</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--text-mute);">·</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--text-mute);">·</td><td style="text-align:center;color:var(--text-mute);">·</td></tr>
+              <tr><td>Backups create</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--text-mute);">·</td><td style="text-align:center;color:var(--text-mute);">·</td></tr>
+              <tr><td>Backups restore</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--text-mute);">·</td><td style="text-align:center;color:var(--text-mute);">·</td><td style="text-align:center;color:var(--text-mute);">·</td><td style="text-align:center;color:var(--text-mute);">·</td></tr>
+              <tr><td>Announce publish</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--text-mute);">·</td><td style="text-align:center;color:var(--text-mute);">·</td><td style="text-align:center;color:var(--text-mute);">·</td></tr>
+              <tr><td>Role management</td><td style="text-align:center;color:var(--grass-light);">✓</td><td style="text-align:center;color:var(--text-mute);">·</td><td style="text-align:center;color:var(--text-mute);">·</td><td style="text-align:center;color:var(--text-mute);">·</td><td style="text-align:center;color:var(--text-mute);">·</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audit log -->
+    <div class="card" style="margin-top:14px;">
+      <div class="card-header"><div class="card-title">▎ Recent Sign-Ins</div></div>
+      <table class="table">
+        <thead><tr><th>User</th><th>Role</th><th>IP</th><th>UA</th><th>Time</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Codex</td><td><span class="badge badge-purple">CODEX</span></td><td class="font-mono" style="font-size:11px;">82.144.12.4</td><td class="font-mono" style="font-size:11px;color:var(--text-mute);">Firefox 142 · macOS</td><td class="font-mono" style="font-size:11px;">2026-06-22 14:02</td><td><span class="badge badge-success">success</span></td></tr>
+          <tr><td>Mira</td><td><span class="badge" style="background:rgba(95,184,74,0.12);color:#8ed87a;">Moderator</span></td><td class="font-mono" style="font-size:11px;">94.13.220.18</td><td class="font-mono" style="font-size:11px;color:var(--text-mute);">Chrome 130 · Windows</td><td class="font-mono" style="font-size:11px;">2026-06-22 13:42</td><td><span class="badge badge-success">success</span></td></tr>
+          <tr><td>Hexz</td><td><span class="badge badge-danger">Admin</span></td><td class="font-mono" style="font-size:11px;">156.34.8.92</td><td class="font-mono" style="font-size:11px;color:var(--text-mute);">Chrome 130 · Linux</td><td class="font-mono" style="font-size:11px;">2026-06-22 12:11</td><td><span class="badge badge-success">success</span></td></tr>
+          <tr><td>UnknownUser#0042</td><td><span class="badge">— none —</span></td><td class="font-mono" style="font-size:11px;">203.18.55.7</td><td class="font-mono" style="font-size:11px;color:var(--text-mute);">Chrome 129 · Android</td><td class="font-mono" style="font-size:11px;">2026-06-22 11:30</td><td><span class="badge badge-danger">denied</span></td></tr>
+          <tr><td>Dev_Joel</td><td><span class="badge badge-info">Developer</span></td><td class="font-mono" style="font-size:11px;">37.221.4.91</td><td class="font-mono" style="font-size:11px;color:var(--text-mute);">Safari 17 · iOS</td><td class="font-mono" style="font-size:11px;">2026-06-22 09:14</td><td><span class="badge badge-success">success</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script src="assets/js/mock.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  renderShell({ title: 'Access Control', crumb: 'System / Roles' });
+
+  let roles = [...MOCK.staffRoles];
+  function render() {
+    document.getElementById('r-count').textContent = roles.length;
+    document.querySelector('#r-table tbody').innerHTML = roles.map(r => `
+      <tr>
+        <td>
+          <span style="display:inline-flex;align-items:center;gap:8px;">
+            <span style="width:10px;height:10px;border-radius:50%;background:${r.color};box-shadow:0 0 8px ${r.color}66;"></span>
+            <span style="font-weight:600;color:${r.color};">${r.name}</span>
+          </span>
+        </td>
+        <td class="font-mono" style="font-size:11px;color:var(--text-mute);">${r.id}</td>
+        <td>${r.members}</td>
+        <td style="font-size:12px;">${r.perms}</td>
+        <td style="text-align:right;">
+          <button class="btn btn-sm"><i data-lucide="settings" style="width:12px;height:12px;"></i></button>
+          <button class="btn btn-sm" onclick="removeRole('${r.id}')"><i data-lucide="trash-2" style="width:12px;height:12px;color:#fca5a5;"></i></button>
+        </td>
+      </tr>
+    `).join('');
+    lucide.createIcons();
+  }
+  function addRole() {
+    const id = prompt('Enter Discord role ID:');
+    if (!id) return;
+    const name = prompt('Display name for this role:') || 'Custom';
+    roles.unshift({ id, name, color:'#7dd3fc', members:0, perms:'Custom (configure below)' });
+    render();
+    toast('Role ID added to verified list','success');
+  }
+  function removeRole(id) {
+    if (!confirm('Remove this role from authorized list? Members will lose dashboard access.')) return;
+    roles = roles.filter(r => r.id !== id);
+    render();
+    toast('Role removed','info');
+  }
+  window.addRole=addRole; window.removeRole=removeRole;
+  render();
+</script>
+</body>
+</html>

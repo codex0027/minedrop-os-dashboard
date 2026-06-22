@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tickets — MineDrop OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="assets/css/theme.css" />
+</head>
+<body>
+<aside id="sidebar" class="sidebar"></aside>
+<div class="main">
+  <header id="topbar" class="topbar"></header>
+  <div class="content">
+
+    <!-- Stat row -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;">
+      <div class="stat lava"><div class="stat-label">Open</div><div class="stat-value">8</div><div class="stat-delta">2 unclaimed</div></div>
+      <div class="stat"><div class="stat-label">Closed Today</div><div class="stat-value">14</div><div class="stat-delta up">▲ 30%</div></div>
+      <div class="stat diamond"><div class="stat-label">Avg Response</div><div class="stat-value">4m</div><div class="stat-delta">17s</div></div>
+      <div class="stat purple"><div class="stat-label">Total Closed</div><div class="stat-value">1,421</div><div class="stat-delta">all-time</div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-top:14px;">
+      <!-- Ticket table -->
+      <div class="card">
+        <div class="card-header">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div class="card-title">▎ Tickets</div>
+            <div style="display:flex;gap:4px;background:var(--bg-3);border-radius:4px;padding:3px;">
+              <button class="btn btn-sm btn-primary" data-filter="all">All</button>
+              <button class="btn btn-sm btn-ghost" data-filter="open">Open</button>
+              <button class="btn btn-sm btn-ghost" data-filter="closed">Closed</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <input id="tk-search" class="input" placeholder="Search…" style="width:200px;" />
+            <button class="btn btn-sm"><i data-lucide="download" style="width:12px;height:12px;"></i> Export</button>
+          </div>
+        </div>
+        <table class="table" id="tk-table">
+          <thead><tr><th>ID</th><th>Creator</th><th>Topic</th><th>Status</th><th>Claimed by</th><th>Opened</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- Staff workload -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">▎ Staff Workload (7d)</div></div>
+        <div class="card-body" style="height:240px;"><canvas id="ch-staff"></canvas></div>
+        <div style="padding:14px;border-top:1px solid var(--border);">
+          <div class="card-title" style="font-size:10px;margin-bottom:10px;">▎ Top Topics</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:12px;">
+            <div style="display:flex;justify-content:space-between;"><span>Connection issues</span><span class="font-mono" style="color:var(--text-mute);">28%</span></div>
+            <div class="bar"><span style="width:28%"></span></div>
+            <div style="display:flex;justify-content:space-between;"><span>Punishment appeals</span><span class="font-mono" style="color:var(--text-mute);">22%</span></div>
+            <div class="bar warn"><span style="width:22%"></span></div>
+            <div style="display:flex;justify-content:space-between;"><span>Purchase / refund</span><span class="font-mono" style="color:var(--text-mute);">19%</span></div>
+            <div class="bar"><span style="width:19%"></span></div>
+            <div style="display:flex;justify-content:space-between;"><span>Bug reports</span><span class="font-mono" style="color:var(--text-mute);">15%</span></div>
+            <div class="bar"><span style="width:15%"></span></div>
+            <div style="display:flex;justify-content:space-between;"><span>Other</span><span class="font-mono" style="color:var(--text-mute);">16%</span></div>
+            <div class="bar"><span style="width:16%"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="assets/js/mock.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  renderShell({ title: 'Tickets', crumb: 'Operations / Tickets' });
+
+  Chart.defaults.color = '#8b97a8';
+  Chart.defaults.font.family = "'JetBrains Mono', monospace";
+
+  let filter='all', q='';
+  function render() {
+    const tbody = document.querySelector('#tk-table tbody');
+    const rows = MOCK.tickets.filter(t =>
+      (filter==='all' || t.status===filter) &&
+      (t.id.toLowerCase().includes(q) || t.user.toLowerCase().includes(q) || t.topic.toLowerCase().includes(q))
+    );
+    tbody.innerHTML = rows.map(t => `
+      <tr>
+        <td class="font-mono" style="font-size:11px;color:var(--diamond);">${t.id}</td>
+        <td>${t.user}</td>
+        <td>${t.topic}</td>
+        <td><span class="badge ${t.status==='open'?'badge-warn':'badge-success'}">${t.status==='open'?'<span class="dot"></span> open':'closed'}</span></td>
+        <td>${t.claimedBy==='—' ? '<span style="color:var(--text-mute);">unclaimed</span>' : t.claimedBy}</td>
+        <td class="font-mono" style="font-size:11px;color:var(--text-mute);">${t.created}</td>
+        <td style="text-align:right;">
+          <button class="btn btn-sm" title="View transcript" onclick="toast('Opening transcript ${t.id}','info')"><i data-lucide="file-text" style="width:12px;height:12px;"></i></button>
+          ${t.status==='open' ? `<button class="btn btn-sm btn-danger" onclick="toast('${t.id} closed','success')"><i data-lucide="lock" style="width:12px;height:12px;"></i></button>` : ''}
+        </td>
+      </tr>
+    `).join('');
+    lucide.createIcons();
+  }
+  render();
+
+  document.querySelectorAll('[data-filter]').forEach(b => {
+    b.addEventListener('click', e => {
+      document.querySelectorAll('[data-filter]').forEach(x => x.classList.replace('btn-primary','btn-ghost'));
+      e.currentTarget.classList.replace('btn-ghost','btn-primary');
+      filter = e.currentTarget.dataset.filter;
+      render();
+    });
+  });
+  document.getElementById('tk-search').addEventListener('input', e => { q = e.target.value.toLowerCase(); render(); });
+
+  // Staff workload chart
+  new Chart(document.getElementById('ch-staff'), {
+    type: 'bar',
+    data: {
+      labels: ['Mira','Hexz','Codex','Dev_Joel','Astro','Kira'],
+      datasets: [
+        { label:'Claimed',  data:[42,38,29,21,17,11], backgroundColor:'#5fb84a', borderRadius:2 },
+        { label:'Closed',   data:[38,35,27,19,15,10], backgroundColor:'#38bdf8', borderRadius:2 },
+      ]
+    },
+    options: { maintainAspectRatio:false, indexAxis:'y',
+      plugins:{ legend:{ labels:{ boxWidth:10 } } },
+      scales:{ x:{ stacked:false, grid:{color:'rgba(58,71,90,0.25)'} }, y:{ stacked:false, grid:{display:false} } } }
+  });
+</script>
+</body>
+</html>

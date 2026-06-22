@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Bot Controls — MineDrop OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="stylesheet" href="assets/css/theme.css" />
+</head>
+<body>
+<aside id="sidebar" class="sidebar"></aside>
+<div class="main">
+  <header id="topbar" class="topbar"></header>
+  <div class="content">
+
+    <!-- Bot status card -->
+    <div class="card">
+      <div class="card-body" style="display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;">
+        <div style="display:flex;gap:18px;align-items:center;">
+          <div style="width:64px;height:64px;border-radius:8px;background:linear-gradient(135deg,#5fb84a,#3e8a30);border:2px solid #0a0d12;box-shadow:0 0 0 1px #3e8a30, inset 0 -5px 0 rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;">
+            <i data-lucide="bot" style="width:30px;height:30px;color:#0a0d12;"></i>
+          </div>
+          <div>
+            <div class="font-pixel" style="font-size:14px;color:var(--grass-light);">MINEDROP CORE v1</div>
+            <div style="display:flex;align-items:center;gap:10px;margin-top:6px;">
+              <span class="badge badge-success"><span class="dot"></span> running</span>
+              <span class="font-mono" style="font-size:11px;color:var(--text-mute);">pid 18472 · uptime 14d 6h · pm2 cluster · 1 worker</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn"><i data-lucide="terminal" style="width:14px;height:14px;"></i> pm2 logs</button>
+          <button class="btn btn-warn" onclick="doAction('Restart')"><i data-lucide="rotate-cw" style="width:14px;height:14px;"></i> Restart Bot</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick actions -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px;">
+      <button class="card btn-action" onclick="doAction('Reload commands')">
+        <div style="padding:18px;text-align:center;">
+          <i data-lucide="refresh-cw" style="width:24px;height:24px;color:var(--grass-light);"></i>
+          <div style="font-weight:600;margin-top:10px;">Reload Commands</div>
+          <div style="font-size:11px;color:var(--text-mute);margin-top:4px;">Re-register slash commands</div>
+        </div>
+      </button>
+      <button class="card btn-action" onclick="doAction('Reload mod cache')">
+        <div style="padding:18px;text-align:center;">
+          <i data-lucide="shield" style="width:24px;height:24px;color:var(--diamond);"></i>
+          <div style="font-weight:600;margin-top:10px;">Reload Mod Cache</div>
+          <div style="font-size:11px;color:var(--text-mute);margin-top:4px;">Pull fresh banned words & filters</div>
+        </div>
+      </button>
+      <button class="card btn-action" onclick="if(confirm('Clear log buffer?'))doAction('Clear logs')">
+        <div style="padding:18px;text-align:center;">
+          <i data-lucide="eraser" style="width:24px;height:24px;color:var(--gold);"></i>
+          <div style="font-weight:600;margin-top:10px;">Clear Logs</div>
+          <div style="font-size:11px;color:var(--text-mute);margin-top:4px;">Wipe in-memory log buffer</div>
+        </div>
+      </button>
+      <button class="card btn-action" onclick="toggleMaint(this)">
+        <div style="padding:18px;text-align:center;">
+          <i data-lucide="construction" style="width:24px;height:24px;color:var(--lava);"></i>
+          <div style="font-weight:600;margin-top:10px;">Maintenance Mode</div>
+          <div style="font-size:11px;color:var(--text-mute);margin-top:4px;" id="maint-state">OFF</div>
+        </div>
+      </button>
+    </div>
+
+    <!-- Direct command -->
+    <div class="card" style="margin-top:14px;">
+      <div class="card-header">
+        <div class="card-title">▎ Direct Command Execution</div>
+        <span class="badge badge-warn"><i data-lucide="alert-triangle" style="width:11px;height:11px;"></i> use with care</span>
+      </div>
+      <div class="card-body">
+        <div style="display:flex;gap:8px;">
+          <span style="font-family:'JetBrains Mono',monospace;color:var(--grass-light);padding:10px 4px;">$</span>
+          <input id="cmd-input" class="input font-mono" placeholder="/say hello-everyone   or   /setticketconfig channel:#tickets" />
+          <button class="btn btn-primary" onclick="runCmd()"><i data-lucide="send" style="width:14px;height:14px;"></i> Execute</button>
+        </div>
+        <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="font-size:11px;color:var(--text-mute);margin-right:4px;">snippets:</span>
+          ${['/panel','/stats','/server','/setticketconfig','/listbadwords','/addbadword','/removebadword','/setsuggestionchannel'].map(c=>`
+            <button class="kbd" onclick="document.getElementById('cmd-input').value='${c}'">${c}</button>
+          `).join('')}
+        </div>
+
+        <div style="margin-top:18px;background:#06090d;border-radius:4px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:12px;max-height:240px;overflow-y:auto;" id="cmd-out">
+          <div style="color:var(--text-mute);">$ pm2 status</div>
+          <div style="color:var(--text-dim);">┌─────┬───────────────┬──────┬─────┬───────────┬──────────┬──────────┐</div>
+          <div style="color:var(--text-dim);">│ id  │ name          │ mode │ pid │ status    │ cpu      │ mem      │</div>
+          <div style="color:var(--text-dim);">├─────┼───────────────┼──────┼─────┼───────────┼──────────┼──────────┤</div>
+          <div style="color:var(--text-dim);">│ 0   │ minedrop-bot  │ fork │ 18472 │ <span style="color:var(--grass-light);">online</span> │ 4.2%  │ 312 MB   │</div>
+          <div style="color:var(--text-dim);">└─────┴───────────────┴──────┴─────┴───────────┴──────────┴──────────┘</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bot metrics -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px;">
+      <div class="stat"><div class="stat-label">Uptime</div><div class="stat-value" style="font-size:18px;">14d 6h</div><div class="stat-delta up">99.94%</div></div>
+      <div class="stat diamond"><div class="stat-label">Memory</div><div class="stat-value" style="font-size:18px;">312 MB</div><div class="stat-delta">heap 198</div></div>
+      <div class="stat gold"><div class="stat-label">Events/sec</div><div class="stat-value" style="font-size:18px;">42</div><div class="stat-delta up">peak 88</div></div>
+      <div class="stat purple"><div class="stat-label">Slash cmds</div><div class="stat-value" style="font-size:18px;">37</div><div class="stat-delta">registered</div></div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .btn-action { background:var(--bg-1); border:1px solid var(--border); cursor:pointer; text-align:center; color:var(--text); transition:all 0.15s; }
+  .btn-action:hover { border-color:var(--grass-dark); background:var(--bg-2); transform:translateY(-1px); }
+</style>
+
+<script src="assets/js/mock.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  renderShell({ title: 'Bot Controls', crumb: 'System / Bot' });
+
+  function doAction(name) {
+    toast(`${name} dispatched...`, 'info');
+    setTimeout(()=> toast(`${name} complete`, 'success'), 900);
+    appendOut(`> ${name.toLowerCase().replace(' ','-')}`);
+    setTimeout(()=> appendOut(`<span style="color:var(--grass-light);">✓ ${name} OK</span>`), 600);
+  }
+  function toggleMaint(card) {
+    const el = card.querySelector('#maint-state');
+    const on = el.textContent === 'OFF';
+    el.textContent = on ? 'ON' : 'OFF';
+    el.style.color = on ? '#fdba74' : '';
+    card.style.borderColor = on ? 'var(--lava)' : '';
+    toast(`Maintenance mode: ${on?'ENABLED':'DISABLED'}`, on?'warn':'info');
+  }
+  function runCmd() {
+    const i = document.getElementById('cmd-input');
+    if (!i.value.trim()) return toast('Empty command','warn');
+    appendOut(`$ ${i.value}`);
+    setTimeout(()=> appendOut(`<span style="color:var(--text-dim);">→ executed in 47ms · </span><span style="color:var(--grass-light);">ok</span>`), 400);
+    i.value='';
+  }
+  function appendOut(line) {
+    const o = document.getElementById('cmd-out');
+    const div = document.createElement('div');
+    div.innerHTML = line;
+    o.appendChild(div);
+    o.scrollTop = o.scrollHeight;
+  }
+  window.doAction=doAction; window.toggleMaint=toggleMaint; window.runCmd=runCmd;
+</script>
+</body>
+</html>

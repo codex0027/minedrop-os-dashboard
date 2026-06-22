@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MineDrop — Server Status</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="assets/css/theme.css" />
+</head>
+<body>
+<!-- Public page: no sidebar -->
+<div style="max-width:1100px;margin:0 auto;padding:32px 28px 60px;position:relative;z-index:1;">
+
+  <!-- Topbar -->
+  <header style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;">
+    <a href="index.html" style="display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit;">
+      <div class="brand-block"></div>
+      <div>
+        <div class="font-pixel" style="font-size:13px;color:var(--grass-light);">MINEDROP</div>
+        <div class="font-mono" style="font-size:10px;color:var(--text-mute);">Network Status</div>
+      </div>
+    </a>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <span class="badge"><i data-lucide="clock" style="width:11px;height:11px;"></i> Updated <span id="updated">just now</span></span>
+      <a href="index.html" class="btn btn-sm"><i data-lucide="log-in" style="width:12px;height:12px;"></i> Staff sign in</a>
+    </div>
+  </header>
+
+  <!-- Hero status -->
+  <div class="card block-edge" style="background:linear-gradient(135deg,#10151c 0%,#1a2a18 100%);padding:0;">
+    <div style="padding:36px;display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center;">
+      <div style="width:72px;height:72px;border-radius:8px;background:linear-gradient(135deg,#5fb84a,#3e8a30);border:2px solid #0a0d12;box-shadow:0 0 0 1px #3e8a30, inset 0 -5px 0 rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;">
+        <i data-lucide="check" style="width:40px;height:40px;color:#0a0d12;stroke-width:3;"></i>
+      </div>
+      <div>
+        <div class="font-pixel" style="font-size:24px;color:var(--grass-light);">ALL SYSTEMS OPERATIONAL</div>
+        <div style="margin-top:8px;color:var(--text-dim);">Java, Bedrock, Discord bot, and web services are running normally.</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="font-pixel" style="font-size:28px;">99.97%</div>
+        <div class="font-mono" style="font-size:11px;color:var(--text-mute);">90-day uptime</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Services -->
+  <h2 class="font-pixel" style="font-size:13px;margin:28px 0 12px;color:var(--text-mute);text-transform:uppercase;letter-spacing:0.08em;">▎ Services</h2>
+  <div style="display:flex;flex-direction:column;gap:8px;">
+
+    <div class="card" style="padding:16px 20px;display:grid;grid-template-columns:auto 1fr auto auto;gap:18px;align-items:center;">
+      <div style="width:36px;height:36px;border-radius:6px;background:linear-gradient(135deg,#5fb84a,#3e8a30);display:flex;align-items:center;justify-content:center;"><i data-lucide="box" style="width:20px;height:20px;color:#0a0d12;"></i></div>
+      <div>
+        <div style="font-weight:600;">Minecraft Java Edition</div>
+        <div class="font-mono" style="font-size:12px;color:var(--text-mute);">play.minedrop.net:25565 · v1.21.4 · 119/500 players</div>
+      </div>
+      <span class="font-mono" style="font-size:12px;color:var(--text-mute);">22ms</span>
+      <span class="badge badge-success"><span class="dot"></span> Operational</span>
+    </div>
+
+    <div class="card" style="padding:16px 20px;display:grid;grid-template-columns:auto 1fr auto auto;gap:18px;align-items:center;">
+      <div style="width:36px;height:36px;border-radius:6px;background:linear-gradient(135deg,#38bdf8,#0369a1);display:flex;align-items:center;justify-content:center;"><i data-lucide="smartphone" style="width:20px;height:20px;color:#0a0d12;"></i></div>
+      <div>
+        <div style="font-weight:600;">Minecraft Bedrock Edition</div>
+        <div class="font-mono" style="font-size:12px;color:var(--text-mute);">bedrock.minedrop.net:19132 · v1.21.40 · 18/500 players</div>
+      </div>
+      <span class="font-mono" style="font-size:12px;color:var(--text-mute);">26ms</span>
+      <span class="badge badge-success"><span class="dot"></span> Operational</span>
+    </div>
+
+    <div class="card" style="padding:16px 20px;display:grid;grid-template-columns:auto 1fr auto auto;gap:18px;align-items:center;">
+      <div style="width:36px;height:36px;border-radius:6px;background:linear-gradient(135deg,#5865f2,#3d48b8);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">D</div>
+      <div>
+        <div style="font-weight:600;">Discord Bot — MineDrop Core</div>
+        <div class="font-mono" style="font-size:12px;color:var(--text-mute);">37 slash commands · 4,287 members · uptime 14d 6h</div>
+      </div>
+      <span class="font-mono" style="font-size:12px;color:var(--text-mute);">98ms</span>
+      <span class="badge badge-success"><span class="dot"></span> Operational</span>
+    </div>
+
+    <div class="card" style="padding:16px 20px;display:grid;grid-template-columns:auto 1fr auto auto;gap:18px;align-items:center;">
+      <div style="width:36px;height:36px;border-radius:6px;background:linear-gradient(135deg,#fbbf24,#b45309);display:flex;align-items:center;justify-content:center;"><i data-lucide="globe" style="width:20px;height:20px;color:#0a0d12;"></i></div>
+      <div>
+        <div style="font-weight:600;">Website & Store</div>
+        <div class="font-mono" style="font-size:12px;color:var(--text-mute);">minedrop.net · CDN: Cloudflare · TLS 1.3</div>
+      </div>
+      <span class="font-mono" style="font-size:12px;color:var(--text-mute);">141ms</span>
+      <span class="badge badge-success"><span class="dot"></span> Operational</span>
+    </div>
+
+    <div class="card" style="padding:16px 20px;display:grid;grid-template-columns:auto 1fr auto auto;gap:18px;align-items:center;">
+      <div style="width:36px;height:36px;border-radius:6px;background:linear-gradient(135deg,#a855f7,#6b21a8);display:flex;align-items:center;justify-content:center;"><i data-lucide="layout-dashboard" style="width:20px;height:20px;color:#0a0d12;"></i></div>
+      <div>
+        <div style="font-weight:600;">MineDrop OS Dashboard</div>
+        <div class="font-mono" style="font-size:12px;color:var(--text-mute);">dashboard.minedrop.net · staff-only · WS pool: healthy</div>
+      </div>
+      <span class="font-mono" style="font-size:12px;color:var(--text-mute);">68ms</span>
+      <span class="badge badge-success"><span class="dot"></span> Operational</span>
+    </div>
+  </div>
+
+  <!-- Uptime chart -->
+  <div class="card" style="margin-top:24px;">
+    <div class="card-header"><div class="card-title">▎ 90-Day Uptime</div><span class="badge badge-success">0 incidents this week</span></div>
+    <div class="card-body" style="padding:18px;">
+      <div id="uptime-grid" style="display:grid;grid-template-columns:repeat(90,1fr);gap:3px;height:32px;"></div>
+      <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-mute);margin-top:10px;">
+        <span>90 days ago</span>
+        <span>today</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live stats -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px;">
+    <div class="stat"><div class="stat-label">Players Online</div><div class="stat-value" id="p-players">137</div><div class="stat-delta">Java + Bedrock</div></div>
+    <div class="stat diamond"><div class="stat-label">TPS</div><div class="stat-value" id="p-tps">19.8</div><div class="stat-delta up">healthy</div></div>
+    <div class="stat gold"><div class="stat-label">Discord Members</div><div class="stat-value">4,287</div><div class="stat-delta">live</div></div>
+    <div class="stat purple"><div class="stat-label">Servers</div><div class="stat-value">5/5</div><div class="stat-delta up">online</div></div>
+  </div>
+
+  <!-- Incidents -->
+  <h2 class="font-pixel" style="font-size:13px;margin:28px 0 12px;color:var(--text-mute);text-transform:uppercase;letter-spacing:0.08em;">▎ Recent Incidents</h2>
+  <div class="card">
+    <div class="card-body">
+      <div style="padding-bottom:14px;border-bottom:1px solid var(--border);margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-weight:600;">Brief TPS dip on survival_overworld</div>
+            <div class="font-mono" style="font-size:11px;color:var(--text-mute);">2026-06-18 · resolved in 4 minutes</div>
+          </div>
+          <span class="badge badge-success">resolved</span>
+        </div>
+        <div style="margin-top:8px;font-size:13px;color:var(--text-dim);">Region near spawn experienced an entity-load spike. Auto-throttle kicked in and TPS recovered to 20.0 within 4 minutes.</div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-weight:600;">Scheduled maintenance — Cloudflare DNS update</div>
+            <div class="font-mono" style="font-size:11px;color:var(--text-mute);">2026-06-12 · 02:00–02:14 UTC</div>
+          </div>
+          <span class="badge badge-success">completed</span>
+        </div>
+        <div style="margin-top:8px;font-size:13px;color:var(--text-dim);">DNS propagation completed without downtime. New CNAMEs are live for dashboard.minedrop.net.</div>
+      </div>
+    </div>
+  </div>
+
+  <footer style="margin-top:32px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-mute);">
+    MineDrop Network · status powered by MineDrop OS · auto-refresh every 30s
+  </footer>
+</div>
+
+<script src="assets/js/mock.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  lucide.createIcons();
+
+  // Uptime grid — 90 days, 99.97% means ~3 minor incidents
+  const grid = document.getElementById('uptime-grid');
+  const days = 90;
+  const blip = new Set([45, 78]); // partial
+  for (let i=0;i<days;i++) {
+    const bar = document.createElement('div');
+    const isBlip = blip.has(i);
+    bar.style.cssText = `border-radius:2px;background:${isBlip?'#fbbf24':'#3e8a30'};${isBlip?'':'box-shadow:inset 0 -2px 0 rgba(0,0,0,0.3);'}`;
+    bar.title = isBlip ? `Day ${days-i}: partial outage` : `Day ${days-i}: operational`;
+    grid.appendChild(bar);
+  }
+
+  setInterval(()=>{
+    document.getElementById('p-players').textContent = randInt(120,160);
+    document.getElementById('p-tps').textContent = (19.4 + Math.random()*0.6).toFixed(1);
+    document.getElementById('updated').textContent = 'just now';
+  }, 5000);
+</script>
+</body>
+</html>

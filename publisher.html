@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Publisher — MineDrop OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="stylesheet" href="assets/css/theme.css" />
+</head>
+<body>
+<aside id="sidebar" class="sidebar"></aside>
+<div class="main">
+  <header id="topbar" class="topbar"></header>
+  <div class="content">
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      <!-- Composer -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">▎ Compose Announcement</div></div>
+        <div class="card-body">
+          <label style="font-size:11px;color:var(--text-mute);text-transform:uppercase;font-family:'JetBrains Mono',monospace;">Target channel</label>
+          <select id="ch" class="select" style="margin:6px 0 14px;" onchange="updatePreview()">
+            <optgroup label="INFO">
+              <option value="announcements"># announcements</option>
+              <option value="rules"># rules</option>
+            </optgroup>
+            <optgroup label="CHAT">
+              <option value="general"># general</option>
+              <option value="minecraft-chat"># minecraft-chat</option>
+            </optgroup>
+            <optgroup label="COMMUNITY">
+              <option value="suggestions"># suggestions</option>
+              <option value="media"># media</option>
+              <option value="youtube-clips"># youtube-clips</option>
+            </optgroup>
+            <optgroup label="STAFF">
+              <option value="staff-chat"># staff-chat</option>
+            </optgroup>
+          </select>
+
+          <label style="font-size:11px;color:var(--text-mute);text-transform:uppercase;font-family:'JetBrains Mono',monospace;">Message</label>
+          <div style="display:flex;gap:6px;margin:6px 0;">
+            <button class="btn btn-sm" onclick="wrap('**','**')"><b>B</b></button>
+            <button class="btn btn-sm" onclick="wrap('*','*')"><i>I</i></button>
+            <button class="btn btn-sm" onclick="wrap('__','__')"><u>U</u></button>
+            <button class="btn btn-sm" onclick="wrap('~~','~~')"><s>S</s></button>
+            <button class="btn btn-sm" onclick="wrap('\`','\`')">&lt;/&gt;</button>
+            <button class="btn btn-sm" onclick="wrap('> ','')">»</button>
+            <button class="btn btn-sm" onclick="wrap('||','||')">spoiler</button>
+            <button class="btn btn-sm" onclick="insert('@everyone ')">@everyone</button>
+          </div>
+
+          <textarea id="msg" class="textarea" placeholder="**Server restart in 10 minutes!**&#10;Saving worlds and reloading plugins.&#10;Thank you for your patience." oninput="updatePreview()">**MineDrop Summer Event is LIVE!**
+
+Drop in to **/warp summer** and grab the new cosmetics, limited-time quests, and a free **Sunburst Cape** for the first 500 players.
+
+Event runs until **June 30, 23:59 UTC**. See you there!</textarea>
+
+          <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--text-mute);font-family:'JetBrains Mono',monospace;">
+            <span><span id="char-count">0</span> / 2000 characters</span>
+            <span>Markdown supported</span>
+          </div>
+
+          <div class="divider"></div>
+
+          <div style="display:flex;gap:14px;font-size:13px;color:var(--text-dim);align-items:center;">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" checked /> Suppress @everyone ping</label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" /> Pin message</label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" /> Cross-post</label>
+          </div>
+
+          <div style="display:flex;gap:10px;margin-top:18px;">
+            <button class="btn btn-primary" onclick="send()" style="flex:1;justify-content:center;"><i data-lucide="send" style="width:14px;height:14px;"></i> Send via Bot</button>
+            <button class="btn"><i data-lucide="clock" style="width:14px;height:14px;"></i> Schedule</button>
+            <button class="btn"><i data-lucide="save" style="width:14px;height:14px;"></i> Save Draft</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">▎ Discord Preview</div><span class="badge badge-info">live</span></div>
+        <div class="card-body" style="background:#313338;border-radius:0 0 6px 6px;padding:18px;">
+          <div style="font-family:'gg sans','Inter',sans-serif;color:#dbdee1;">
+            <div style="font-size:11px;color:#949ba4;text-transform:uppercase;font-weight:700;margin-bottom:8px;"># <span id="prev-ch">announcements</span></div>
+            <div style="display:flex;gap:14px;">
+              <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#5fb84a,#3e8a30);display:flex;align-items:center;justify-content:center;font-weight:700;color:#0a0d12;flex-shrink:0;">MD</div>
+              <div style="flex:1;min-width:0;">
+                <div style="display:flex;align-items:baseline;gap:8px;">
+                  <span style="font-weight:600;color:#fff;">MineDrop</span>
+                  <span style="background:#5865f2;color:#fff;font-size:10px;padding:1px 5px;border-radius:3px;font-weight:600;">APP</span>
+                  <span style="font-size:11px;color:#949ba4;">Today at <span id="prev-time">14:32</span></span>
+                </div>
+                <div id="prev-body" style="margin-top:4px;line-height:1.5;color:#dbdee1;font-size:14px;white-space:pre-wrap;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- History -->
+    <div class="card" style="margin-top:14px;">
+      <div class="card-header"><div class="card-title">▎ Recent Announcements</div></div>
+      <table class="table">
+        <thead><tr><th>Channel</th><th>Preview</th><th>By</th><th>Sent</th><th></th></tr></thead>
+        <tbody>
+          <tr><td class="font-mono">#announcements</td><td>Server restart in 10 minutes...</td><td>Codex</td><td class="font-mono" style="font-size:11px;color:var(--text-mute);">2026-06-22 13:10</td><td style="text-align:right;"><button class="btn btn-sm"><i data-lucide="copy" style="width:12px;height:12px;"></i></button></td></tr>
+          <tr><td class="font-mono">#general</td><td>New skyblock update is live...</td><td>Hexz</td><td class="font-mono" style="font-size:11px;color:var(--text-mute);">2026-06-21 18:42</td><td style="text-align:right;"><button class="btn btn-sm"><i data-lucide="copy" style="width:12px;height:12px;"></i></button></td></tr>
+          <tr><td class="font-mono">#suggestions</td><td>We just shipped your top 5 voted...</td><td>Codex</td><td class="font-mono" style="font-size:11px;color:var(--text-mute);">2026-06-20 11:05</td><td style="text-align:right;"><button class="btn btn-sm"><i data-lucide="copy" style="width:12px;height:12px;"></i></button></td></tr>
+          <tr><td class="font-mono">#youtube-clips</td><td>📺 New trailer is up — check it out!</td><td>Mira</td><td class="font-mono" style="font-size:11px;color:var(--text-mute);">2026-06-18 20:14</td><td style="text-align:right;"><button class="btn btn-sm"><i data-lucide="copy" style="width:12px;height:12px;"></i></button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script src="assets/js/mock.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  renderShell({ title: 'Publisher', crumb: 'System / Publisher' });
+
+  const msg = document.getElementById('msg');
+
+  function md(s) {
+    return s
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g,'<em>$1</em>')
+      .replace(/__(.+?)__/g,'<u>$1</u>')
+      .replace(/~~(.+?)~~/g,'<s>$1</s>')
+      .replace(/`([^`]+)`/g,'<code style="background:#2b2d31;padding:1px 4px;border-radius:3px;font-family:JetBrains Mono,monospace;">$1</code>')
+      .replace(/\|\|(.+?)\|\|/g,'<span style="background:#202225;color:#202225;padding:0 2px;border-radius:3px;cursor:pointer;" onclick="this.style.color=\'#dbdee1\';this.style.background=\'rgba(255,255,255,0.05)\'">$1</span>')
+      .replace(/^&gt; (.+)$/gm,'<blockquote style="border-left:4px solid #4f545c;padding-left:10px;margin:4px 0;color:#b5bac1;">$1</blockquote>')
+      .replace(/@(everyone|here)/g,'<span style="background:rgba(88,101,242,0.3);color:#c9cdfb;padding:0 2px;border-radius:3px;">@$1</span>');
+  }
+  function updatePreview() {
+    document.getElementById('prev-ch').textContent = document.getElementById('ch').value;
+    document.getElementById('prev-body').innerHTML = md(msg.value) || '<span style="color:#5c6776;font-style:italic;">Your message preview...</span>';
+    document.getElementById('char-count').textContent = msg.value.length;
+    document.getElementById('prev-time').textContent = new Date().toTimeString().slice(0,5);
+  }
+  function wrap(a,b) {
+    const s = msg.selectionStart, e = msg.selectionEnd;
+    msg.value = msg.value.slice(0,s) + a + msg.value.slice(s,e) + b + msg.value.slice(e);
+    msg.focus(); msg.setSelectionRange(s+a.length, e+a.length);
+    updatePreview();
+  }
+  function insert(t) {
+    const s = msg.selectionStart;
+    msg.value = msg.value.slice(0,s) + t + msg.value.slice(s);
+    msg.focus(); msg.setSelectionRange(s+t.length,s+t.length);
+    updatePreview();
+  }
+  function send() {
+    if (!msg.value.trim()) return toast('Message cannot be empty','warn');
+    const ch = document.getElementById('ch').value;
+    toast(`Bot posted to #${ch}`,'success');
+  }
+  window.wrap=wrap; window.insert=insert; window.send=send; window.updatePreview=updatePreview;
+  updatePreview();
+</script>
+</body>
+</html>

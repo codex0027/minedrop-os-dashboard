@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Link Permissions — MineDrop OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="stylesheet" href="assets/css/theme.css" />
+</head>
+<body>
+<aside id="sidebar" class="sidebar"></aside>
+<div class="main">
+  <header id="topbar" class="topbar"></header>
+  <div class="content">
+
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;">
+      <!-- Allowed channels -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">▎ Channels where links are allowed</div>
+          <span class="badge"><span id="lc-count">5</span> allowed</span>
+        </div>
+        <div class="card-body">
+          <div style="display:flex;gap:8px;margin-bottom:14px;">
+            <select id="lc-select" class="select" style="flex:1;">
+              <option value="">— select a channel to allow —</option>
+              <option value="off-topic">#off-topic</option>
+              <option value="screenshots">#screenshots</option>
+              <option value="resource-packs">#resource-packs</option>
+              <option value="staff-chat">#staff-chat</option>
+              <option value="developer-chat">#developer-chat</option>
+            </select>
+            <button class="btn btn-primary" onclick="addChannel()"><i data-lucide="plus" style="width:14px;height:14px;"></i> Allow</button>
+          </div>
+          <table class="table" id="lc-table">
+            <thead><tr><th>Channel</th><th>ID</th><th>Permission</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Rules summary -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">▎ Link Rules</div></div>
+        <div class="card-body">
+          <div style="margin-bottom:18px;">
+            <div style="font-size:11px;color:var(--text-mute);text-transform:uppercase;margin-bottom:6px;">Blocked everywhere except allowed:</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <span class="badge badge-danger font-mono">https://</span>
+              <span class="badge badge-danger font-mono">http://</span>
+              <span class="badge badge-danger font-mono">discord.gg/</span>
+              <span class="badge badge-danger font-mono">www.</span>
+              <span class="badge badge-danger font-mono">.gg</span>
+              <span class="badge badge-danger font-mono">.io</span>
+            </div>
+          </div>
+          <div style="margin-bottom:18px;">
+            <div style="font-size:11px;color:var(--text-mute);text-transform:uppercase;margin-bottom:6px;">Always-allowed domains:</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <span class="badge badge-success font-mono">minedrop.net</span>
+              <span class="badge badge-success font-mono">youtube.com</span>
+              <span class="badge badge-success font-mono">youtu.be</span>
+              <span class="badge badge-success font-mono">tenor.com</span>
+              <span class="badge badge-success font-mono">tiktok.com</span>
+            </div>
+          </div>
+          <div style="padding-top:14px;border-top:1px solid var(--border);">
+            <div style="font-size:11px;color:var(--text-mute);text-transform:uppercase;margin-bottom:6px;">Violation action:</div>
+            <div style="font-size:13px;">Delete message · log to <span class="font-mono kbd">#security-logs</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent link blocks -->
+    <div class="card" style="margin-top:14px;">
+      <div class="card-header">
+        <div class="card-title">▎ Recent Link Violations</div>
+        <span class="badge badge-info">last 24h</span>
+      </div>
+      <table class="table">
+        <thead><tr><th>Time</th><th>User</th><th>Channel</th><th>Link</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td class="font-mono" style="font-size:11px;">14:08:32</td><td>NoobMaster69</td><td>#general</td><td class="font-mono" style="font-size:11px;color:#fca5a5;">https://free-nitr0[.]xyz</td><td><span class="badge badge-danger">Deleted + Timeout 5m</span></td></tr>
+          <tr><td class="font-mono" style="font-size:11px;">13:42:11</td><td>Kawii.exe</td><td>#suggestions</td><td class="font-mono" style="font-size:11px;color:#fca5a5;">discord.gg/scamserver</td><td><span class="badge badge-danger">Deleted + Timeout 1h</span></td></tr>
+          <tr><td class="font-mono" style="font-size:11px;">12:55:08</td><td>silverwolf</td><td>#general</td><td class="font-mono" style="font-size:11px;">tinyurl.com/abc</td><td><span class="badge badge-warn">Deleted</span></td></tr>
+          <tr><td class="font-mono" style="font-size:11px;">11:30:24</td><td>BlueFox</td><td>#minecraft-chat</td><td class="font-mono" style="font-size:11px;">bit.ly/giveaway</td><td><span class="badge badge-warn">Deleted</span></td></tr>
+          <tr><td class="font-mono" style="font-size:11px;">09:14:00</td><td>Phantom</td><td>#general</td><td class="font-mono" style="font-size:11px;color:#fca5a5;">steamcommunity[.]ru/gift</td><td><span class="badge badge-danger">Deleted + Timeout 1d</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script src="assets/js/mock.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  renderShell({ title: 'Link Permissions', crumb: 'Operations / Links' });
+
+  let channels = [...MOCK.linkChannels];
+  function render() {
+    document.getElementById('lc-count').textContent = channels.length;
+    document.querySelector('#lc-table tbody').innerHTML = channels.map(c => `
+      <tr>
+        <td><span class="font-mono">${c.name}</span></td>
+        <td class="font-mono" style="font-size:11px;color:var(--text-mute);">${c.id}</td>
+        <td><span class="badge badge-success">links allowed</span></td>
+        <td style="text-align:right;"><button class="btn btn-sm" onclick="removeChannel('${c.id}')"><i data-lucide="x" style="width:12px;height:12px;"></i> Remove</button></td>
+      </tr>
+    `).join('');
+    lucide.createIcons();
+  }
+  function addChannel() {
+    const sel = document.getElementById('lc-select');
+    if (!sel.value) return toast('Pick a channel first','warn');
+    channels.unshift({ id: String(Date.now()).slice(-13), name:'#'+sel.value });
+    sel.value='';
+    render();
+    toast('Channel added to allowed list','success');
+  }
+  function removeChannel(id) {
+    channels = channels.filter(c=>c.id!==id);
+    render();
+    toast('Channel removed','info');
+  }
+  window.addChannel=addChannel; window.removeChannel=removeChannel;
+  render();
+</script>
+</body>
+</html>

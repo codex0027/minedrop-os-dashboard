@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MineDrop OS — Sign In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="stylesheet" href="assets/css/theme.css" />
+</head>
+<body>
+<main style="min-height:100vh;display:grid;grid-template-columns:1fr 1fr;">
+
+  <!-- Left: hero -->
+  <section style="position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:48px;background:linear-gradient(135deg,#0a0d12 0%,#10151c 60%,#1a2a18 100%);overflow:hidden;">
+    <!-- Pixel block field -->
+    <div aria-hidden="true" style="position:absolute;inset:0;opacity:0.35;background-image:
+      linear-gradient(rgba(95,184,74,0.08) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(95,184,74,0.08) 1px,transparent 1px);
+      background-size:40px 40px;"></div>
+
+    <!-- Floating blocks -->
+    <div aria-hidden="true" style="position:absolute;top:18%;right:14%;width:64px;height:64px;background:linear-gradient(135deg,#8ed87a,#3e8a30);border:2px solid #0a0d12;box-shadow:0 0 0 1px #3e8a30, inset 0 -6px 0 rgba(0,0,0,0.3);transform:rotate(8deg);"></div>
+    <div aria-hidden="true" style="position:absolute;bottom:22%;right:34%;width:42px;height:42px;background:linear-gradient(135deg,#fbbf24,#b45309);border:2px solid #0a0d12;box-shadow:0 0 0 1px #b45309, inset 0 -4px 0 rgba(0,0,0,0.3);transform:rotate(-12deg);"></div>
+    <div aria-hidden="true" style="position:absolute;top:60%;right:8%;width:52px;height:52px;background:linear-gradient(135deg,#38bdf8,#0369a1);border:2px solid #0a0d12;box-shadow:0 0 0 1px #0369a1, inset 0 -5px 0 rgba(0,0,0,0.3);transform:rotate(15deg);"></div>
+
+    <div style="position:relative;display:flex;align-items:center;gap:12px;">
+      <div class="brand-block" style="width:40px;height:40px;"></div>
+      <div>
+        <div class="font-pixel" style="font-size:14px;color:var(--grass-light);">MINEDROP</div>
+        <div class="font-mono" style="font-size:11px;color:var(--text-mute);">Network Operating System</div>
+      </div>
+    </div>
+
+    <div style="position:relative;max-width:520px;">
+      <h1 class="font-pixel" style="font-size:32px;line-height:1.4;color:var(--text);margin:0 0 18px;">
+        ONE PANEL.<br/>
+        <span style="color:var(--grass-light);">WHOLE NETWORK.</span>
+      </h1>
+      <p style="font-size:15px;color:var(--text-dim);line-height:1.65;max-width:460px;">
+        Run Discord moderation, Minecraft analytics, tickets, backups, and bot ops from a single hardened console — designed for the MineDrop staff team.
+      </p>
+
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:28px;max-width:460px;">
+        <div class="card block-edge" style="padding:14px;">
+          <div class="font-mono" style="font-size:10px;color:var(--text-mute);text-transform:uppercase;">Members</div>
+          <div class="font-pixel" style="font-size:18px;margin-top:6px;color:var(--grass-light);">4,287</div>
+        </div>
+        <div class="card block-edge" style="padding:14px;">
+          <div class="font-mono" style="font-size:10px;color:var(--text-mute);text-transform:uppercase;">Players Online</div>
+          <div class="font-pixel" style="font-size:18px;margin-top:6px;color:var(--diamond);">137</div>
+        </div>
+        <div class="card block-edge" style="padding:14px;">
+          <div class="font-mono" style="font-size:10px;color:var(--text-mute);text-transform:uppercase;">Open Tickets</div>
+          <div class="font-pixel" style="font-size:18px;margin-top:6px;color:var(--gold);">8</div>
+        </div>
+        <div class="card block-edge" style="padding:14px;">
+          <div class="font-mono" style="font-size:10px;color:var(--text-mute);text-transform:uppercase;">TPS</div>
+          <div class="font-pixel" style="font-size:18px;margin-top:6px;color:var(--grass-light);">19.8</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="position:relative;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-mute);">
+      v1.0.0 · dashboard.minedrop.net · © 2026 MineDrop Network
+    </div>
+  </section>
+
+  <!-- Right: login -->
+  <section style="display:flex;align-items:center;justify-content:center;padding:48px;background:var(--bg-0);">
+    <div style="width:100%;max-width:400px;">
+      <div style="margin-bottom:28px;">
+        <div class="font-mono" style="font-size:11px;color:var(--text-mute);text-transform:uppercase;letter-spacing:0.1em;">// staff_login</div>
+        <h2 class="font-pixel" style="font-size:18px;margin:8px 0 6px;">SIGN IN</h2>
+        <p style="font-size:14px;color:var(--text-dim);">
+          Authenticate with Discord. Access is gated by your role in the MineDrop guild.
+        </p>
+      </div>
+
+      <button id="discord-btn" class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;font-size:14px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.078.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        Continue with Discord
+      </button>
+
+      <div style="display:flex;align-items:center;gap:12px;margin:22px 0;color:var(--text-mute);font-size:11px;">
+        <div style="flex:1;height:1px;background:var(--border);"></div>
+        OR
+        <div style="flex:1;height:1px;background:var(--border);"></div>
+      </div>
+
+      <a href="status.html" class="btn" style="width:100%;justify-content:center;">
+        <i data-lucide="activity" style="width:14px;height:14px;"></i>
+        View public server status
+      </a>
+
+      <div class="card" style="margin-top:28px;padding:16px;">
+        <div style="display:flex;gap:10px;">
+          <i data-lucide="shield-check" style="width:18px;height:18px;color:var(--grass-light);flex-shrink:0;margin-top:1px;"></i>
+          <div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Role-gated access</div>
+            <div style="font-size:12px;color:var(--text-dim);line-height:1.55;">
+              Only members with one of the verified staff role IDs (Owner, Co-Owner, CODEX, Admin, Developer, Moderator, Support, Builder) can sign in.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:24px;text-align:center;font-size:11px;color:var(--text-mute);font-family:'JetBrains Mono',monospace;">
+        By signing in you agree to the MineDrop Staff Conduct Policy.
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  lucide.createIcons();
+  document.getElementById('discord-btn').addEventListener('click', (e) => {
+    e.preventDefault();
+    const btn = e.currentTarget;
+    btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin" style="width:18px;height:18px;"></i> Authenticating...';
+    btn.style.opacity = '0.8';
+    lucide.createIcons();
+    setTimeout(() => { window.location.href = 'dashboard.html'; }, 900);
+  });
+</script>
+<style>
+  @media (max-width: 900px) { main { grid-template-columns: 1fr !important; } main > section:first-child { display: none; } }
+  .animate-spin { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Minecraft Analytics — MineDrop OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="assets/css/theme.css" />
+</head>
+<body>
+<aside id="sidebar" class="sidebar"></aside>
+<div class="main">
+  <header id="topbar" class="topbar"></header>
+  <div class="content">
+
+    <!-- Server card -->
+    <div class="card" style="background:linear-gradient(135deg,#10151c 0%,#162115 100%);">
+      <div class="card-body" style="display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;">
+        <div style="display:flex;gap:20px;align-items:center;">
+          <div style="width:80px;height:80px;border-radius:8px;background:linear-gradient(135deg,#5fb84a,#3e8a30);border:2px solid #0a0d12;box-shadow:0 0 0 1px #3e8a30, inset 0 -6px 0 rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;">
+            <i data-lucide="box" style="width:40px;height:40px;color:#0a0d12;"></i>
+          </div>
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span class="dot"></span>
+              <span class="font-mono" style="color:var(--grass-light);font-size:13px;">ONLINE · 99.97% uptime</span>
+            </div>
+            <h1 class="font-pixel" style="font-size:22px;margin:6px 0 4px;">play.minedrop.net</h1>
+            <div class="font-mono" style="font-size:12px;color:var(--text-dim);">Java 1.21.4 · Bedrock 1.21.40 · Region: EU-West · Build #14732</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn"><i data-lucide="rotate-cw" style="width:14px;height:14px;"></i> Reload</button>
+          <button class="btn btn-warn"><i data-lucide="power" style="width:14px;height:14px;"></i> Restart MC</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stat row -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:14px;">
+      <div class="stat"><div class="stat-label">Players Online</div><div class="stat-value" id="m-players">137</div><div class="stat-delta">of 500 max</div></div>
+      <div class="stat diamond"><div class="stat-label">TPS</div><div class="stat-value" id="m-tps">19.8</div><div class="stat-delta up">healthy</div></div>
+      <div class="stat lava"><div class="stat-label">CPU</div><div class="stat-value" id="m-cpu">42<span style="font-size:14px;color:var(--text-mute);">%</span></div><div class="stat-delta">8 cores</div></div>
+      <div class="stat gold"><div class="stat-label">RAM</div><div class="stat-value" id="m-ram">10.9<span style="font-size:14px;color:var(--text-mute);">/16 GB</span></div><div class="stat-delta">68% used</div></div>
+      <div class="stat purple"><div class="stat-label">Ping</div><div class="stat-value" id="m-ping">24<span style="font-size:14px;color:var(--text-mute);">ms</span></div><div class="stat-delta up">excellent</div></div>
+    </div>
+
+    <!-- Editions -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">▎ Java Edition</div>
+          <span class="badge badge-success"><span class="dot"></span> Online</span>
+        </div>
+        <div class="card-body">
+          <table class="table" style="margin:-6px -4px;">
+            <tbody>
+              <tr><td style="color:var(--text-mute);width:140px;">Address</td><td class="font-mono">play.minedrop.net</td></tr>
+              <tr><td style="color:var(--text-mute);">Port</td><td class="font-mono">25565</td></tr>
+              <tr><td style="color:var(--text-mute);">Version</td><td class="font-mono">1.21.4</td></tr>
+              <tr><td style="color:var(--text-mute);">Players</td><td class="font-mono">119 / 500</td></tr>
+              <tr><td style="color:var(--text-mute);">Ping</td><td class="font-mono">22 ms</td></tr>
+              <tr><td style="color:var(--text-mute);">MOTD</td><td class="font-mono" style="font-size:11px;">MineDrop · Survival · Skyblock · Factions</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">▎ Bedrock Edition</div>
+          <span class="badge badge-success"><span class="dot"></span> Online</span>
+        </div>
+        <div class="card-body">
+          <table class="table" style="margin:-6px -4px;">
+            <tbody>
+              <tr><td style="color:var(--text-mute);width:140px;">Address</td><td class="font-mono">bedrock.minedrop.net</td></tr>
+              <tr><td style="color:var(--text-mute);">Port</td><td class="font-mono">19132</td></tr>
+              <tr><td style="color:var(--text-mute);">Version</td><td class="font-mono">1.21.40</td></tr>
+              <tr><td style="color:var(--text-mute);">Players</td><td class="font-mono">18 / 500</td></tr>
+              <tr><td style="color:var(--text-mute);">Ping</td><td class="font-mono">26 ms</td></tr>
+              <tr><td style="color:var(--text-mute);">Protocol</td><td class="font-mono">766 (Geyser bridge)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-top:14px;">
+      <div class="card">
+        <div class="card-header"><div class="card-title">▎ Players Online (24h)</div><span class="badge"><span class="dot"></span> live</span></div>
+        <div class="card-body" style="height:260px;"><canvas id="ch-players"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">▎ TPS Stability</div></div>
+        <div class="card-body" style="height:260px;"><canvas id="ch-tps"></canvas></div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;">
+      <div class="card">
+        <div class="card-header"><div class="card-title">▎ Resource Usage</div></div>
+        <div class="card-body">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-dim);margin-bottom:6px;"><span>CPU</span><span class="font-mono">42%</span></div>
+          <div class="bar" style="margin-bottom:18px;"><span style="width:42%"></span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-dim);margin-bottom:6px;"><span>RAM</span><span class="font-mono">10.9 / 16 GB</span></div>
+          <div class="bar warn" style="margin-bottom:18px;"><span style="width:68%"></span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-dim);margin-bottom:6px;"><span>Disk I/O</span><span class="font-mono">37 MB/s</span></div>
+          <div class="bar" style="margin-bottom:18px;"><span style="width:35%"></span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-dim);margin-bottom:6px;"><span>Network</span><span class="font-mono">128 Mbps</span></div>
+          <div class="bar"><span style="width:22%"></span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">▎ Top Worlds (chunks loaded)</div></div>
+        <div class="card-body" style="padding:0;">
+          <table class="table">
+            <thead><tr><th>World</th><th>Chunks</th><th>Entities</th><th>TPS</th></tr></thead>
+            <tbody>
+              <tr><td>survival_overworld</td><td>1,842</td><td>3,217</td><td>19.9</td></tr>
+              <tr><td>skyblock</td><td>684</td><td>921</td><td>20.0</td></tr>
+              <tr><td>factions_world</td><td>1,201</td><td>2,488</td><td>19.5</td></tr>
+              <tr><td>survival_nether</td><td>312</td><td>540</td><td>20.0</td></tr>
+              <tr><td>survival_end</td><td>118</td><td>92</td><td>20.0</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Out of scope notice -->
+    <div class="card" style="margin-top:14px;background:rgba(56,189,248,0.05);border-color:rgba(56,189,248,0.2);">
+      <div class="card-body" style="display:flex;gap:14px;">
+        <i data-lucide="rocket" style="width:22px;height:22px;color:var(--diamond);flex-shrink:0;"></i>
+        <div>
+          <div style="font-weight:600;margin-bottom:4px;">Coming in next release</div>
+          <div style="font-size:13px;color:var(--text-dim);">Player tracking · Leaderboards · Economy stats · Faction stats · Playtime analytics</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="assets/js/mock.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  renderShell({ title: 'Minecraft Analytics', crumb: 'Overview / Minecraft' });
+
+  Chart.defaults.color = '#8b97a8';
+  Chart.defaults.borderColor = 'rgba(58,71,90,0.4)';
+  Chart.defaults.font.family = "'JetBrains Mono', monospace";
+
+  const grass = '#5fb84a', diamond = '#38bdf8', lava='#f97316';
+
+  new Chart(document.getElementById('ch-players'), {
+    type:'line',
+    data:{
+      labels: MOCK.hours,
+      datasets:[{
+        label:'Players', data: MOCK.hours.map((_,i)=> Math.round(60 + 90*Math.sin((i-6)/3.8) + Math.random()*20)),
+        borderColor: grass, backgroundColor:'rgba(95,184,74,0.18)', fill:true, tension:0.35, pointRadius:0, borderWidth:2
+      }]
+    },
+    options:{ maintainAspectRatio:false, plugins:{ legend:{display:false} },
+      scales:{ x:{ grid:{display:false}, ticks:{ maxRotation:0, autoSkip:true } }, y:{ grid:{color:'rgba(58,71,90,0.25)'}, suggestedMin:0 } } }
+  });
+
+  new Chart(document.getElementById('ch-tps'), {
+    type:'line',
+    data:{
+      labels: MOCK.hours,
+      datasets:[{
+        label:'TPS', data: MOCK.hours.map(()=> +(19.4 + Math.random()*0.6).toFixed(2)),
+        borderColor: diamond, backgroundColor:'rgba(56,189,248,0.15)', fill:true, tension:0.3, pointRadius:0, borderWidth:2
+      }]
+    },
+    options:{ maintainAspectRatio:false, plugins:{ legend:{display:false} },
+      scales:{ x:{ grid:{display:false}, ticks:{ maxRotation:0, autoSkip:true } },
+               y:{ grid:{color:'rgba(58,71,90,0.25)'}, min:18, max:20.2 } } }
+  });
+
+  // Live updates
+  setInterval(()=>{
+    document.getElementById('m-players').textContent = randInt(120,160);
+    document.getElementById('m-tps').textContent     = (19.4 + Math.random()*0.6).toFixed(1);
+    document.getElementById('m-cpu').innerHTML       = randInt(35,55)+'<span style="font-size:14px;color:var(--text-mute);">%</span>';
+    document.getElementById('m-ping').innerHTML      = randInt(20,32)+'<span style="font-size:14px;color:var(--text-mute);">ms</span>';
+  }, 3000);
+</script>
+</body>
+</html>
